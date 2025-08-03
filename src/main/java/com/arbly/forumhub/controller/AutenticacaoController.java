@@ -1,7 +1,7 @@
 package com.arbly.forumhub.controller;
 
-import com.arbly.forumhub.domain.usuario.DadosAutenticacao;
-import com.arbly.forumhub.domain.usuario.Usuario;
+import com.arbly.forumhub.domain.usuario.AutenticacaoRequestDTO;
+import com.arbly.forumhub.domain.usuario.UsuarioDetails;
 import com.arbly.forumhub.infra.security.DadosTokenJWT;
 import com.arbly.forumhub.infra.security.TokenService;
 import jakarta.validation.Valid;
@@ -25,11 +25,10 @@ public class AutenticacaoController {
     private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<DadosTokenJWT> efetuarLogin(@RequestBody @Valid DadosAutenticacao dados){
+    public ResponseEntity<DadosTokenJWT> efetuarLogin(@RequestBody @Valid AutenticacaoRequestDTO dados){
         var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
         var authentication = manager.authenticate(authenticationToken);
-        var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
+        var tokenJWT = tokenService.gerarToken((UsuarioDetails) authentication.getPrincipal());
         return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
     }
-
 }

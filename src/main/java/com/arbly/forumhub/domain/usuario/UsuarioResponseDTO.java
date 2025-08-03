@@ -36,20 +36,4 @@ public class UsuarioResponseDTO {
                 .map(p -> new PerfilDTO(p.getId(), p.getNome()))
                 .collect(Collectors.toSet());
     }
-
-//    public static UsuarioResponseDTO toDTO(Usuario usuario) {
-//        Set<PerfilDTO> perfis = usuario.getPerfis()
-//                .stream()
-//                .map(p -> new PerfilDTO(p.getId(), p.getNome()))
-//                .collect(Collectors.toSet());
-//
-//        return new UsuarioResponseDTO(
-//                usuario.getId(),
-//                usuario.getNome(),
-//                usuario.getEmail(),
-//                usuario.isAtivo(),
-//                perfis
-//        );
-//    }
-
 }
