@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("check")
-public class Check {
+public class CheckController {
 
     @GetMapping
     public ResponseEntity check(){

@@ -26,7 +26,7 @@ public class TokenService {
     private String springApplicationName;
 
     public String gerarToken(UsuarioDetails usuario){
-        log.debug("1 gerarToken");
+        log.debug("gerarToken");
         try {
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.create()
@@ -40,7 +40,7 @@ public class TokenService {
     }
 
     public String getSubject(String tokenJWT){
-        log.debug("1 getSubject");
+        log.debug("getSubject");
         try {
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.require(algoritmo)
@@ -55,6 +55,6 @@ public class TokenService {
     }
 
     private Instant dataExpiracao() {
-        return LocalDateTime.now().plusMinutes(60).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusHours(12).toInstant(ZoneOffset.of("-03:00"));
     }
 }

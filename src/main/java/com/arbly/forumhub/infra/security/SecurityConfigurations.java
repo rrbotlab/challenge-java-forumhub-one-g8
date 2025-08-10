@@ -1,6 +1,5 @@
 package com.arbly.forumhub.infra.security;
 
-import com.arbly.forumhub.domain.usuario.AutenticacaoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +26,25 @@ public class SecurityConfigurations {
     @Autowired
     private SecurityFilter securityFilter;
 
+    public static final String [] ENDPOINTS_POST_NO_AUTH = {"/login"};
+    public static final String [] ENDPOINTS_GET_NO_AUTH = {"/check", "/respostas/**", "/topicos/**", "/cursos/**"};
+    public static final String [] ENDPOINTS_SWAGGER = {
+            "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**"
+    };
+    public static final String [] ENDPOINTS_ADMIN = {
+            "/admin"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        log.debug("1 SecurityFilterChain");
+        log.debug("SecurityFilterChain");
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.POST,"/login").permitAll();
-                    req.requestMatchers(HttpMethod.GET,"/check", "/status").hasRole("ADMIN");
-                    req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
-                    req.requestMatchers("/vollmed/v3/api-docs/**", "/vollmed/swagger-ui.html", "/vollmed/swagger-ui/**").permitAll();
+                    req.requestMatchers(HttpMethod.POST, ENDPOINTS_POST_NO_AUTH).permitAll();
+                    req.requestMatchers(HttpMethod.GET, ENDPOINTS_GET_NO_AUTH).permitAll();
+                    req.requestMatchers(ENDPOINTS_SWAGGER).permitAll();
+                    req.requestMatchers(ENDPOINTS_ADMIN).hasRole("ADMIN");
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
@@ -45,7 +53,7 @@ public class SecurityConfigurations {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        log.debug("1 AuthenticationManager");
+        log.debug("AuthenticationManager");
         return configuration.getAuthenticationManager();
     }
 

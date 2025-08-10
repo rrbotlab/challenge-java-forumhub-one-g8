@@ -3,6 +3,7 @@ package com.arbly.forumhub.infra.security;
 
 import com.arbly.forumhub.domain.usuario.UsuarioDetails;
 import com.arbly.forumhub.domain.usuario.UsuarioRepository;
+import com.arbly.forumhub.domain.usuario.UsuarioDetalheDados;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,12 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -32,23 +33,29 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        log.debug("1 doFilterInternal");
-        var tokenJWT = recuperarToken(request);
+        log.info("doFilterInternal");
+        log.info(request.getRequestURI());
+        if (!Arrays.asList(SecurityConfigurations.ENDPOINTS_GET_NO_AUTH).contains(request.getRequestURI()) ||
+                !Arrays.asList(SecurityConfigurations.ENDPOINTS_POST_NO_AUTH).contains(request.getRequestURI())) {
 
-        if (tokenJWT != null) {
-            log.debug("2 verificando token");
-            var subject = tokenService.getSubject(tokenJWT);
-            var usuario = repository.findByEmail(subject);
-            UsuarioDetails userDetails = new UsuarioDetails(usuario.get());
-            var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            log.info("AUTH REQUIRED");
+            var tokenJWT = recuperarToken(request);
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (tokenJWT != null) {
+                log.info("tokenJWT != null");
+                var subject = tokenService.getSubject(tokenJWT);
+                var usuario = repository.findByEmail(subject);
+                UsuarioDetails userDetails = new UsuarioDetails(usuario.get());
+                var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-            userDetails.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .forEach(log::info);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                UsuarioDetalheDados usuarioResponseDTO = new UsuarioDetalheDados(usuario.get());
+                log.info("{} {}", usuarioResponseDTO.email(), usuarioResponseDTO.perfis().stream().map(p -> p.nome()).toList());
+
+            }
         }
-        log.debug("3 filterChain.doFilter");
+        log.info("filterChain.doFilter -> continue");
         filterChain.doFilter(request, response);
     }
 
