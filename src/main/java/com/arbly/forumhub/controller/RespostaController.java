@@ -1,6 +1,7 @@
 package com.arbly.forumhub.controller;
 
 import com.arbly.forumhub.domain.resposta.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class RespostaController {
     private RespostaService respostaService;
 
     @PostMapping
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<RespostaDetalheDados> criar(@RequestBody @Valid RespostaCriarDados dados, UriComponentsBuilder uriBuilder){
         var resposta = respostaService.criar(dados);
         var uri = uriBuilder.path("/respostas/topico/{id}").buildAndExpand(resposta.getTopico().getId()).toUri();
@@ -35,6 +37,7 @@ public class RespostaController {
 
     @PutMapping
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<RespostaDetalheDados> atualizar(@RequestBody @Valid RespostaAtualizarDados dados){
         var resposta = repository.getReferenceById(dados.id());
         resposta.atualizarInformacoes(dados);
@@ -44,10 +47,10 @@ public class RespostaController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<Void> excluir(@PathVariable(name = "id") Long id){
         var resposta = repository.getReferenceById(id);
         resposta.excluir();
         return ResponseEntity.noContent().build();
     }
-
 }

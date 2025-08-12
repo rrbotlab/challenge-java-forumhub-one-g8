@@ -2,6 +2,7 @@ package com.arbly.forumhub.controller;
 
 import com.arbly.forumhub.domain.usuario.UsuarioRepository;
 import com.arbly.forumhub.domain.usuario.UsuarioDetalheDados;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("usuarios")
+@SecurityRequirement(name = "bearer-key")
 public class UsuarioController {
 
     @Autowired

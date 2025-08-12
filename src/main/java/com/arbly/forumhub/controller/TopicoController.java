@@ -1,6 +1,7 @@
 package com.arbly.forumhub.controller;
 
 import com.arbly.forumhub.domain.topico.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -22,6 +23,7 @@ public class TopicoController {
     private TopicoService topicoService;
 
     @PostMapping
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<TopicoDetalheDados> criar(@RequestBody @Valid TopicoCriarDados dados, UriComponentsBuilder uriBuilder){
         var topico = topicoService.criar(dados);
         var uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
@@ -46,6 +48,7 @@ public class TopicoController {
 
     @PutMapping
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<TopicoDetalheDados> atualizar(@RequestBody @Valid TopicoAtualizarDados dados){
         var topico = repository.getReferenceById(dados.id());
         topico.atualizarInformacoes(dados);
@@ -55,6 +58,7 @@ public class TopicoController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<Void> excluir(@PathVariable(name = "id") Long id){
         var topico = repository.getReferenceById(id);
         topico.excluir();
