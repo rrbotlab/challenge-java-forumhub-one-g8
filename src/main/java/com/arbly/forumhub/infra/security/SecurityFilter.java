@@ -33,29 +33,33 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("doFilterInternal");
-        log.info(request.getRequestURI());
+        log.info("SecurityFilter.doFilterInternal: {}", request.getRequestURI());
         if (!Arrays.asList(SecurityConfigurations.ENDPOINTS_GET_NO_AUTH).contains(request.getRequestURI()) ||
                 !Arrays.asList(SecurityConfigurations.ENDPOINTS_POST_NO_AUTH).contains(request.getRequestURI())) {
 
-            log.info("AUTH REQUIRED");
+            log.info("SecurityFilter.doFilterInternal: Verificando token");
             var tokenJWT = recuperarToken(request);
 
             if (tokenJWT != null) {
-                log.info("tokenJWT != null");
+                log.info("Token presente");
                 var subject = tokenService.getSubject(tokenJWT);
-                var usuario = repository.findByEmail(subject);
+                var usuario = repository.findByEmailAndAtivoTrue(subject);
                 UsuarioDetails userDetails = new UsuarioDetails(usuario.get());
                 var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 UsuarioDetalheDados usuarioResponseDTO = new UsuarioDetalheDados(usuario.get());
-                log.info("{} {}", usuarioResponseDTO.email(), usuarioResponseDTO.perfis().stream().map(p -> p.nome()).toList());
+                log.info("Token verificado: {} {}", usuarioResponseDTO.email(), usuarioResponseDTO.perfis().stream().map(p -> p.nome()).toList());
 
+            }else{
+                log.info("Token ausente");
             }
+
+        }else{
+            log.info("SecurityFilter.doFilterInternal: Endpoint não requer token");
         }
-        log.info("filterChain.doFilter -> continue");
+        log.info("SecurityFilter.doFilterInternal: continuando");
         filterChain.doFilter(request, response);
     }
 

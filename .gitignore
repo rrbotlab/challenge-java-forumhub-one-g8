@@ -32,8 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 
-### personal
+### project
 /src/main/resources/forumhub.sql
 /src/main/resources/v1_forumhub-initial.sql
 /src/main/resources/application-localhost.properties
 /src/main/resources/insert.sql
+/.local/

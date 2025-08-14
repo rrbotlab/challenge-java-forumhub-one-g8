@@ -23,6 +23,12 @@ public class UsuarioController {
 
     @GetMapping
     public ResponseEntity<Page<UsuarioDetalheDados>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){
+        var page = repository.findAll(paginacao).map(UsuarioDetalheDados::new);
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/ativos")
+    public ResponseEntity<Page<UsuarioDetalheDados>> listarAtivos(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){
         var page = repository.findAllByAtivoTrue(paginacao).map(UsuarioDetalheDados::new);
         return ResponseEntity.ok(page);
     }

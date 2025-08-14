@@ -26,7 +26,7 @@ public class TokenService {
     private String springApplicationName;
 
     public String gerarToken(UsuarioDetails usuario){
-        log.debug("gerarToken");
+        log.info("TokenService.gerarToken");
         try {
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.create()
@@ -40,7 +40,7 @@ public class TokenService {
     }
 
     public String getSubject(String tokenJWT){
-        log.debug("getSubject");
+        log.info("TokenService.getSubject");
         try {
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.require(algoritmo)

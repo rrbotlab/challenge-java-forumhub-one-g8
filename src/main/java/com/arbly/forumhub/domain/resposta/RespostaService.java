@@ -1,6 +1,5 @@
 package com.arbly.forumhub.domain.resposta;
 
-import com.arbly.forumhub.domain.topico.Topico;
 import com.arbly.forumhub.domain.topico.TopicoRepository;
 import com.arbly.forumhub.domain.usuario.UsuarioDetails;
 import com.arbly.forumhub.domain.usuario.UsuarioRepository;
@@ -32,7 +31,6 @@ public class RespostaService {
         var topico = topicoRepository.findById(dados.topicoId()).orElseThrow(() -> new EntityNotFoundException("Topico inválido"));
         var dataCriacao = LocalDateTime.now();
 
-        // String mensagem, Topico topico, LocalDateTime dataCriacao, Usuario autor, Boolean solucao, Boolean ativo
         return respostaRepository.save(new Resposta(dados.mensagem(), topico, dataCriacao, autor, false, true));
 
     }

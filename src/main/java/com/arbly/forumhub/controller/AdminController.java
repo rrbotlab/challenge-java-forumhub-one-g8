@@ -6,14 +6,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/admin")
 @SecurityRequirement(name = "bearer-key")
 public class AdminController {
 
     @GetMapping
-    public ResponseEntity<String> admin(){
-        return ResponseEntity.ok("admin endpoint");
+    public ResponseEntity<?> admin(){
+        Map<String,String> map = new HashMap<>();
+        map.put("msg","admin endpoint");
+        return ResponseEntity.ok(map);
     }
 
 }

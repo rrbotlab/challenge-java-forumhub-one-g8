@@ -73,18 +73,6 @@ public class Topico {
         this.ativo = false;
     }
 
-    /*public Topico(String titulo, String mensagem, LocalDateTime dataCriacao, String status, Usuario autor,
-                  Curso curso, Boolean ativo, List<Resposta> respostas) {
-        this.titulo = titulo;
-        this.mensagem = mensagem;
-        this.dataCriacao = dataCriacao;
-        this.status = status;
-        this.autor = autor;
-        this.curso = curso;
-        this.ativo = ativo;
-        this.respostas = respostas;
-    }*/
-
 }
 
 

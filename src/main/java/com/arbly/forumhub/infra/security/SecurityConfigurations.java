@@ -27,17 +27,13 @@ public class SecurityConfigurations {
     private SecurityFilter securityFilter;
 
     public static final String [] ENDPOINTS_POST_NO_AUTH = {"/login"};
-    public static final String [] ENDPOINTS_GET_NO_AUTH = {"/check", "/respostas/**", "/topicos/**", "/cursos/**"};
-    public static final String [] ENDPOINTS_SWAGGER = {
-            "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**"
-    };
-    public static final String [] ENDPOINTS_ADMIN = {
-            "/admin"
-    };
+    public static final String [] ENDPOINTS_GET_NO_AUTH = {"/", "/check/**", "/respostas/**", "/topicos/**", "/cursos/**"};
+    public static final String [] ENDPOINTS_SWAGGER = {"/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**"};
+    public static final String [] ENDPOINTS_ADMIN = {"/admin", "/usuarios/**"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        log.debug("SecurityFilterChain");
+        log.info("SecurityConfigurations.SecurityFilterChain");
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
@@ -53,7 +49,7 @@ public class SecurityConfigurations {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        log.debug("AuthenticationManager");
+        log.info("SecurityConfigurations.AuthenticationManager");
         return configuration.getAuthenticationManager();
     }
 

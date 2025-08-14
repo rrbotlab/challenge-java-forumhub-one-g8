@@ -1,6 +1,7 @@
 package com.arbly.forumhub.controller;
 
 import com.arbly.forumhub.domain.resposta.*;
+import com.arbly.forumhub.domain.usuario.UsuarioAutorize;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -40,7 +41,10 @@ public class RespostaController {
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<RespostaDetalheDados> atualizar(@RequestBody @Valid RespostaAtualizarDados dados){
         var resposta = repository.getReferenceById(dados.id());
-        resposta.atualizarInformacoes(dados);
+
+        if (UsuarioAutorize.autorizeTransacao(resposta.getAutor().getId())) {
+            resposta.atualizarInformacoes(dados);
+        }
 
         return ResponseEntity.ok(new RespostaDetalheDados(resposta));
     }
@@ -50,7 +54,11 @@ public class RespostaController {
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<Void> excluir(@PathVariable(name = "id") Long id){
         var resposta = repository.getReferenceById(id);
-        resposta.excluir();
+
+        if (UsuarioAutorize.autorizeTransacao(resposta.getAutor().getId())) {
+            resposta.excluir();
+        }
+
         return ResponseEntity.noContent().build();
     }
 }

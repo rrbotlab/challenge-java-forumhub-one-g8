@@ -1,5 +1,6 @@
 package com.arbly.forumhub.infra.exception;
 
+import com.arbly.forumhub.domain.AutorizacaoException;
 import com.arbly.forumhub.domain.ValidacaoException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,11 @@ public class TratadorDeErros {
     @ExceptionHandler(ValidacaoException.class)
     public ResponseEntity<?> tratarErroRegraDeNegocio(ValidacaoException ex) {
         return ResponseEntity.badRequest().body(new ExceptionMensagemDados(ex.getMessage()));
+    }
+
+    @ExceptionHandler(AutorizacaoException.class)
+    public ResponseEntity<?> tratarAutorizacaoException(AutorizacaoException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionMensagemDados(ex.getMessage()));
     }
 
     @ExceptionHandler(BadCredentialsException.class)

@@ -1,6 +1,7 @@
 package com.arbly.forumhub.controller;
 
 import com.arbly.forumhub.domain.topico.*;
+import com.arbly.forumhub.domain.usuario.UsuarioAutorize;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -51,7 +52,10 @@ public class TopicoController {
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<TopicoDetalheDados> atualizar(@RequestBody @Valid TopicoAtualizarDados dados){
         var topico = repository.getReferenceById(dados.id());
-        topico.atualizarInformacoes(dados);
+
+        if (UsuarioAutorize.autorizeTransacao(topico.getAutor().getId())) {
+            topico.atualizarInformacoes(dados);
+        }
 
         return ResponseEntity.ok(new TopicoDetalheDados(topico));
     }
@@ -61,7 +65,11 @@ public class TopicoController {
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<Void> excluir(@PathVariable(name = "id") Long id){
         var topico = repository.getReferenceById(id);
-        topico.excluir();
+
+        if (UsuarioAutorize.autorizeTransacao(topico.getAutor().getId())) {
+            topico.excluir();
+        }
+
         return ResponseEntity.noContent().build();
     }
 
