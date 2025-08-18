@@ -1,11 +1,11 @@
 package com.arbly.forumhub.domain.curso;
 
-public record CursoDetalheDados(
+public record CursoListagemDados(
         Long id,
         String nome,
         String categoria
-){
-    public CursoDetalheDados(Curso curso) {
+) {
+    public CursoListagemDados(Curso curso) {
         this(curso.getId(), curso.getNome(), curso.getCategoria());
     }
 }
