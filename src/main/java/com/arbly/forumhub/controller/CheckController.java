@@ -3,6 +3,7 @@ package com.arbly.forumhub.controller;
 import com.arbly.forumhub.domain.usuario.UsuarioDetails;
 import com.arbly.forumhub.domain.usuario.UsuarioDetalheDados;
 import com.arbly.forumhub.domain.usuario.UsuarioRepository;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,11 +25,13 @@ public class CheckController {
     @GetMapping
     public ResponseEntity<?> check(){
         Map<String, String> map = new HashMap<>();
-        map.put("msg","checked v3");
+        map.put("label", "nop");
+        map.put("message","/check endpoint");
         return ResponseEntity.ok(map);
     }
 
     @GetMapping("/who")
+    @Hidden
     public ResponseEntity<?> who(){
         Map<String, Object> map = new HashMap<>();
         var usuarioAutenticado = (UsuarioDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -40,4 +43,13 @@ public class CheckController {
 
         return ResponseEntity.ok(map);
     }
+
+    @GetMapping("/health")
+    public ResponseEntity<?> status(){
+        Map<String, String> map = new HashMap<>();
+        map.put("label", "API healthcheck");
+        map.put("message", "Healthy");
+        return ResponseEntity.ok(map);
+    }
+
 }

@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.arbly</groupId>
 	<artifactId>forumhub</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.3-ALPHA</version>
 	<name>forumhub</name>
 	<description>Alura ONE Challenge ForumHub</description>
 	<url/>
